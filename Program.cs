@@ -193,15 +193,15 @@ bool ProcessCommand(string comando)
             Console.WriteLine("¡Hasta luego!");
             return false;
 
-        case "listar":
+        case "list":
             ListarProducts();
             break;
 
-        case "agregar":
-            AgregarProducto();
+        case "add":
+            AddProduct();
             break;
 
-        case "buscar":
+        case "search":
             SearchProduct();
             break;
 
@@ -242,30 +242,30 @@ void ListarProducts()
 }
 
 
-void AgregarProducto()
+void AddProduct()
 {
-    Console.WriteLine("\n--- Agregar Producto ---");
+        Console.WriteLine("\n--- Add Product ---");
 
-    Console.Write("Nombre: ");
+    Console.Write("Name: ");
     string nombre = Console.ReadLine() ?? "";
 
-    Console.Write("Precio: ");
+    Console.Write("Price: ");
     if (!decimal.TryParse(Console.ReadLine(), out decimal precio))
     {
-        Console.WriteLine("⚠ Precio inválido.");
+        Console.WriteLine("⚠ Invalid price.");
         return;
     }
 
-    Console.Write("Cantidad: ");
+    Console.Write("Quantity : ");
     if (!int.TryParse(Console.ReadLine(), out int cantidad))
     {
-        Console.WriteLine("⚠ Cantidad inválida.");
+        Console.WriteLine("⚠ Invalid quantity.");
         return;
     }
 
-    Console.WriteLine("\nCategorías: Electronica, Ropa, Alimentos, Hogar, Deportes, Libros, Otros");
-    Console.Write("Categoría: ");
-    string catStr = Console.ReadLine() ?? "Otros";
+    Console.WriteLine("\nCategories: Electronics, Clothing, Food, Home, Sports, Books, Others");
+    Console.Write("Category: ");
+    string catStr = Console.ReadLine() ?? "Others";
 
     if (!Enum.TryParse<ProductCategory>(catStr, true, out var categoria))
     {
