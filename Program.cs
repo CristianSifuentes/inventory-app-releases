@@ -6,7 +6,7 @@ var version = assembly.GetName().Version;
 
 int productCount = 0; // Placeholder for product count
 decimal totalValue = 0m; // Placeholder for total inventory value
-bool isInventoryInitialized = false; // Flag to indicate if inventory is initialized
+bool isInventoryInitialized = true; // Flag to indicate if inventory is initialized
 
 if (args.Length > 0)
 {
@@ -14,6 +14,7 @@ if (args.Length > 0)
     if (arg == "--help" || arg == "-h")
     {
         showHelp();
+        Environment.Exit(0);
         return;
     }
     else if (arg == "--version" || arg == "-v")
@@ -21,9 +22,24 @@ if (args.Length > 0)
         Console.WriteLine($"Version: {version}");
         return;
     }
+    else if (arg == "--structure")
+    {
+        showStructure();
+        Environment.Exit(0);
+        return;
+    }
+    else if (arg == "q")
+    {
+        isInventoryInitialized = false;
+        Console.WriteLine("Exiting program...");
+        Environment.Exit(0);
+        return;
+    }
+
     else
     {
         Console.WriteLine("Unknown option. Use --help for usage information.");
+        Environment.Exit(2);
         return;
     }
 }
@@ -31,8 +47,6 @@ else
 {
     // Initialize inventory (placeholder)
     isInventoryInitialized = true;
-
-
 }
 
 showBanner();
@@ -104,19 +118,20 @@ void showStructure()
 
 void showHelp() 
 {
-    Console.WriteLine("USO: dotnet run [opciones]");
+    Console.WriteLine("USAGE: dotnet run [options]");
     Console.WriteLine();
-    Console.WriteLine("OPCIONES:");
-    Console.WriteLine("  --help, -h       Muestra esta ayuda");
-    Console.WriteLine("  --version, -v    Muestra la versión");
+    Console.WriteLine("OPTIONS:");
+    Console.WriteLine("  --help, -h       Shows this help");
+    Console.WriteLine("  --version, -v    Shows the version");
+    Console.WriteLine("  --structure      Shows the project structure");
     Console.WriteLine();
-    Console.WriteLine("COMANDOS INTERACTIVOS:");
-    Console.WriteLine("  listar           Lista productos del inventario");
-    Console.WriteLine("  agregar          Agrega un nuevo producto");
-    Console.WriteLine("  buscar           Busca productos");
-    Console.WriteLine("  salir            Sale del programa");
+    Console.WriteLine("INTERACTIVE COMMANDS:");
+    Console.WriteLine("  list             Lists inventory products");
+    Console.WriteLine("  add              Adds a new product");
+    Console.WriteLine("  search           Searches products");
+    Console.WriteLine("  exit             Exits the program");
     Console.WriteLine();
-    Console.WriteLine("EJEMPLOS:");
+    Console.WriteLine("EXAMPLES:");
     Console.WriteLine("  dotnet run");
     Console.WriteLine("  dotnet run --version");
 
