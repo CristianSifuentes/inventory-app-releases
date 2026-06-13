@@ -2,6 +2,121 @@
 
 This repository contains the source code for the **InventoryApp** application, organized by course modules.
 
+## Contents
+- [Module 1: The .NET Ecosystem](#module-1-the-net-ecosystem)
+  - [Module objective](#module-objective)
+  - [Module summary](#module-summary)
+  - [What this version includes](#what-this-version-includes)
+  - [Requirements](#requirements)
+  - [How to run](#how-to-run)
+  - [Project structure](#project-structure)
+- [Current Module: Module 2 - Inputs, Outputs, and Types](#current-module-module-2---inputs-outputs-and-types)
+  - [Requirements](#requirements)
+  - [How to run](#how-to-run)
+  - [Interactive commands](#interactive-commands)
+  - [Current project structure](#current-project-structure)
+  - [Progress checklist](#progress-checklist)
+  - [Author](#author)
+- [Repository Structure](#repository-structure)
+- [How to download a specific module](#how-to-download-a-specific-module)
+  - [Option 1: Clone a specific branch](#option-1-clone-a-specific-branch)
+  - [Option 2: Switch between modules](#option-2-switch-between-modules-if-you-already-cloned-the-repo)
+- [How to compare modules](#how-to-compare-modules)
+  - [Compare on GitHub](#compare-on-github)
+
+## Module 1: The .NET Ecosystem
+
+### Module objective
+
+Set up the project foundation, validate the development environment with .NET 9, and leave an initial structure ready to evolve in the following modules.
+
+### Module summary
+
+Module 1 introduces the .NET ecosystem and establishes the starting point for the inventory system. This version creates a console application, defines the project file, and organizes the initial structure so the code can grow cleanly in the following modules.
+
+### What this version includes
+
+- Console project with `Program.cs`
+- Project configuration file `InventoryApp.csproj`
+- Initial `src/Models/` structure
+- `.gitignore` file
+- Base module documentation
+
+### Requirements
+- .NET 9 SDK
+
+### How to run
+```bash
+dotnet run
+```
+
+### Project structure
+```
+InventoryApp/
+├── Program.cs
+├── InventoryApp.csproj
+├── .gitignore
+├── README.md
+└── src/
+    └── Models/
+        └── .gitkeep
+```
+
+
+
+## Current Module: Module 2 - Inputs, Outputs, and Types
+
+Project for the **.NET Fundamentals** course - Platzi.
+
+### Requirements
+
+- .NET 9 SDK
+
+### How to run
+
+```bash
+dotnet run
+dotnet run -- --help
+dotnet run -- --version
+```
+
+### Interactive commands
+
+- `list` - Lists inventory products
+- `add` - Adds a new product (Module 3)
+- `search` - Searches products (Module 4)
+- `exit` - Exits the program
+
+### Current project structure
+
+```text
+InventoryApp/
+|-- Program.cs
+|-- InventoryApp.csproj
+|-- .gitignore
+|-- README.md
+|-- src/
+|   |-- Factories/
+|   |   `-- ProductFactory.cs
+|   `-- Models/
+|       |-- Product.cs
+|       |-- ProductCategory.cs
+|       |-- ProductStatus.cs
+|       `-- Supplier.cs
+```
+
+### Progress checklist
+
+- [x] Module 1: The .NET Ecosystem
+- [x] Module 2: Inputs, Outputs, and Types
+- [ ] Module 3: Functions and Domain Modeling
+- [ ] Module 4: Collections and LINQ
+- [ ] Module 5: Files and Processing
+
+### Author
+
+Sebastian Martinez
+
 ## Repository Structure
 
 Each course module is maintained in its own branch:
