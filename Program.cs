@@ -1,12 +1,32 @@
 // INVENTORY SYSTEM - Module 1 Complete
 using System.Reflection;
+using Inventory.Models;
+using Inventory.Factories;
 
 var assembly = Assembly.GetExecutingAssembly();
 var version = assembly.GetName().Version;
 
+
 int productCount = 0; // Placeholder for product count
 decimal totalValue = 0m; // Placeholder for total inventory value
-bool isInventoryInitialized = true; // Flag to indicate if inventory is initialized
+bool isInventoryInitialized = true; //
+
+// Load initial products (placeholder)
+var products = new List<Product>();
+
+showBanner();
+Console.WriteLine("Available commands: list, add, search, exit");
+Console.WriteLine();
+
+
+bool  shouldContinue = true;
+while (shouldContinue)
+{
+
+    var command = ReadEntry("inventory> ");
+    shouldContinue = ProcessCommand(command);
+}
+
 
 if (args.Length > 0)
 {
@@ -49,9 +69,7 @@ else
     isInventoryInitialized = true;
 }
 
-showBanner();
-Console.WriteLine("Available commands: list, add, search, exit");
-Console.WriteLine();
+
 
 
 while (isInventoryInitialized)
@@ -139,3 +157,129 @@ void showHelp()
 }
 
 
+
+void SearchProduct()
+{
+    Console.WriteLine("🔍 Función buscar (se implementará completamente en Módulo 4)");
+    
+    Console.Write("\nBuscar por nombre: ");
+    string termino = Console.ReadLine() ?? "";
+
+    var encontrados = products
+        .Where(p => p.Name.Contains(termino, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    if (encontrados.Count == 0)
+    {
+        Console.WriteLine($"No se encontraron products con '{termino}'");
+        return;
+    }
+
+    Console.WriteLine($"\n=== {encontrados.Count} resultado(s) ===");
+    foreach (var p in encontrados)
+    {
+        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2}");
+    }
+}
+
+
+bool ProcessCommand(string comando)
+{
+    switch (comando)
+    {
+        case "salir":
+        case "exit":
+        case "q":
+            Console.WriteLine("¡Hasta luego!");
+            return false;
+
+        case "listar":
+            ListarProducts();
+            break;
+
+        case "agregar":
+            AgregarProducto();
+            break;
+
+        case "buscar":
+            SearchProduct();
+            break;
+
+        case "":
+            break;
+
+        default:
+            Console.WriteLine($"❌ Comando '{comando}' no reconocido");
+            Console.WriteLine("   Use: listar, agregar, buscar, salir");
+            break;
+    }
+
+    Console.WriteLine();
+    return true;
+}
+
+
+string ReadEntry(string prompt)
+{
+    Console.Write(prompt);
+    return Console.ReadLine()?.Trim().ToLower() ?? "";
+}
+
+void ListarProducts()
+{
+    if (products.Count == 0)
+    {
+        Console.WriteLine("📦 No hay products en el inventario.");
+        return;
+    }
+
+    Console.WriteLine("\n=== products ===");
+    foreach (var p in products)
+    {
+        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2} | Cant: {p.Quantity} | Total: ${p.TotalValue:F2}");
+    }
+    Console.WriteLine($"\nTotal: {products.Count} producto(s)");
+}
+
+
+void AgregarProducto()
+{
+    Console.WriteLine("\n--- Agregar Producto ---");
+
+    Console.Write("Nombre: ");
+    string nombre = Console.ReadLine() ?? "";
+
+    Console.Write("Precio: ");
+    if (!decimal.TryParse(Console.ReadLine(), out decimal precio))
+    {
+        Console.WriteLine("⚠ Precio inválido.");
+        return;
+    }
+
+    Console.Write("Cantidad: ");
+    if (!int.TryParse(Console.ReadLine(), out int cantidad))
+    {
+        Console.WriteLine("⚠ Cantidad inválida.");
+        return;
+    }
+
+    Console.WriteLine("\nCategorías: Electronica, Ropa, Alimentos, Hogar, Deportes, Libros, Otros");
+    Console.Write("Categoría: ");
+    string catStr = Console.ReadLine() ?? "Otros";
+
+    if (!Enum.TryParse<ProductCategory>(catStr, true, out var categoria))
+    {
+        categoria = ProductCategory.Other;
+    }
+
+    try
+    {
+        var producto = ProductFactory.Create(nombre, precio, cantidad, categoria);
+        products.Add(producto);
+        Console.WriteLine($"\n✓ Producto '{producto.Name}' agregado con ID {producto.Id}");
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"\n⚠ Error: {ex.Message}");
+    }
+}
