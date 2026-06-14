@@ -2,14 +2,19 @@
 using System.Reflection;
 using Inventory.Models;
 using Inventory.Factories;
+using Inventory.Repositories;
 
 var assembly = Assembly.GetExecutingAssembly();
 var version = assembly.GetName().Version;
+var repository = new InMemoryProductRepository();
 
 
-int productCount = 0; // Placeholder for product count
-decimal totalValue = 0m; // Placeholder for total inventory value
-bool isInventoryInitialized = true; //
+// int productCount = 0; // Placeholder for product count
+// decimal totalValue = 0m; // Placeholder for total inventory value
+// bool isInventoryInitialized = true; //
+
+
+
 
 // Load initial products (placeholder)
 var products = new List<Product>();
@@ -20,6 +25,7 @@ Console.WriteLine();
 
 
 bool  shouldContinue = true;
+bool isInventoryInitialized = false;
 while (shouldContinue)
 {
 
@@ -281,5 +287,134 @@ void SearchProduct()
     foreach (var product in matches)
     {
         Console.WriteLine($"ID: {product.Id} | {product.Name} | ${product.Price:F2}");
+    }
+}
+void ShowStatistics()
+{
+    Console.WriteLine("\n=== ESTADÍSTICAS ===");
+    Console.WriteLine($"products totales: {repository.Count}");
+    Console.WriteLine($"Valor total inventario: ${repository.GetTotalInventoryValue():F2}");
+    Console.WriteLine($"Precio promedio: ${repository.GetAveragePrice():F2}");
+
+    var masCaro = repository.GetMostExpensiveProduct();
+    if (masCaro != null)
+    {
+        Console.WriteLine($"Más caro: {masCaro.Name} (${masCaro.Price:F2})");
+    }
+
+    Console.WriteLine("\nPor categoría:");
+    foreach (var kvp in repository.CountByCategory())
+    {
+        Console.WriteLine($"  {kvp.Key}: {kvp.Value} product(s)");
+    }
+}
+
+
+void ShowStockLow()
+{
+    var lowStockProducts = repository.GetLowStock(5).ToList();
+
+    if (lowStockProducts.Count == 0)
+    {
+        Console.WriteLine("\n✓ There are no products with low stock.");
+        return;
+    }
+
+    Console.WriteLine("\n=== ALERT: LOW STOCK (< 5) ===");
+    foreach (var p in lowStockProducts)
+    {
+        Console.WriteLine($"⚠ {p.Name} | Stock: {p.Quantity} | ${p.Price:F2}");
+    }
+}
+
+
+void ExportCsv()
+{
+    Console.WriteLine("\n=== EXPORT CSV ===");
+    Console.WriteLine("Id,Name,Price,Quantity,Category,TotalValue");
+
+    foreach (var p in repository.GetAll().OrderBy(p => p.Id))
+    {
+        Console.WriteLine($"{p.Id},{p.Name},{p.Price:F2},{p.Quantity},{p.Category},{p.TotalValue:F2}");
+    }
+
+    Console.WriteLine("\n(In module 5: we will save this to a file)");
+}
+
+
+void SearchProductById()
+{
+    Console.Write("\nID: ");
+    if (!int.TryParse(Console.ReadLine(), out int id))
+    {
+        Console.WriteLine("⚠ ID inválido.");
+        return;
+    }
+
+    var product = repository.GetById(id);
+
+    if (product == null)
+    {
+        Console.WriteLine($"⚠ There is no product with ID {id}");
+        return;
+    }
+
+    Console.WriteLine($"\n--- Product #{product.Id} ---");
+    Console.WriteLine($"Name: {product.Name}");
+    Console.WriteLine($"Price: ${product.Price :F2}");
+    Console.WriteLine($"Quantity: {product.Quantity}");
+    Console.WriteLine($"Total Value: ${product.TotalValue:F2}");
+    Console.WriteLine($"Category: {product.Category}");
+    Console.WriteLine($"Estado: {product.Status }");
+}
+
+void DeleteProduct()
+{
+    Console.Write("\nID a eliminar: ");
+    if (!int.TryParse(Console.ReadLine(), out int id))
+    {
+        Console.WriteLine("⚠ ID inválido.");
+        return;
+    }
+
+    var product = repository.GetById(id);
+    if (product == null)
+    {
+        Console.WriteLine($"⚠ No existe product con ID {id}");
+        return;
+    }
+
+    Console.Write($"¿Eliminar '{product.Name}'? (s/n): ");
+    if (Console.ReadLine()?.ToLower() == "s")
+    {
+        repository.Delete(id);
+        Console.WriteLine("✓ Product deleted.");
+    }
+}
+
+void SearchProductsByCategory()
+{
+    Console.WriteLine("\nCategories: Electronica, Ropa, Alimentos, Hogar, Deportes, Libros, Otros");
+    Console.Write("Category: ");
+    string catStr = Console.ReadLine() ?? "";
+
+    if (!Enum.TryParse<ProductCategory>(catStr, true, out var category))
+    {
+        Console.WriteLine("⚠ Category invalid.");
+        return;
+    }
+
+    var products = repository.FindByCategory(category).ToList();
+
+    if (products.Count == 0)
+    {
+        Console.WriteLine($"\nNo hay products en {category.ToString().ToUpper()}.");
+        return;
+    }
+
+    Console.WriteLine($"\n=== productS EN {category.ToString().ToUpper()} ===");
+    foreach (var p in products)
+    {
+        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2} | Cant: {p.Quantity}");
     }
 }
