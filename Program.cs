@@ -160,9 +160,9 @@ void showHelp()
 
 void SearchProduct()
 {
-    Console.WriteLine("🔍 Función buscar (se implementará completamente en Módulo 4)");
+    Console.WriteLine("🔍 Search Function (to be implemented in Module 4)");
     
-    Console.Write("\nBuscar por nombre: ");
+    Console.Write("\nSearch by name: ");
     string termino = Console.ReadLine() ?? "";
 
     var encontrados = products
@@ -171,11 +171,11 @@ void SearchProduct()
 
     if (encontrados.Count == 0)
     {
-        Console.WriteLine($"No se encontraron products con '{termino}'");
+        Console.WriteLine($"No products found with '{termino}'");
         return;
     }
 
-    Console.WriteLine($"\n=== {encontrados.Count} resultado(s) ===");
+    Console.WriteLine($"\n=== {encontrados.Count} result(s) ===");
     foreach (var p in encontrados)
     {
         Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2}");
@@ -187,14 +187,13 @@ bool ProcessCommand(string comando)
 {
     switch (comando)
     {
-        case "salir":
         case "exit":
         case "q":
-            Console.WriteLine("¡Hasta luego!");
+            Console.WriteLine("See you later!");
             return false;
 
         case "list":
-            ListarProducts();
+            ListProducts();
             break;
 
         case "add":
@@ -209,8 +208,8 @@ bool ProcessCommand(string comando)
             break;
 
         default:
-            Console.WriteLine($"❌ Comando '{comando}' no reconocido");
-            Console.WriteLine("   Use: listar, agregar, buscar, salir");
+            Console.WriteLine($"❌ Command '{comando}' not recognized");
+            Console.WriteLine("   Use: list, add, search, exit");
             break;
     }
 
@@ -225,39 +224,39 @@ string ReadEntry(string prompt)
     return Console.ReadLine()?.Trim().ToLower() ?? "";
 }
 
-void ListarProducts()
+void ListProducts()
 {
     if (products.Count == 0)
     {
-        Console.WriteLine("📦 No hay products en el inventario.");
+        Console.WriteLine("📦 There are no products in the inventory.");
         return;
     }
 
     Console.WriteLine("\n=== products ===");
     foreach (var p in products)
     {
-        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2} | Cant: {p.Quantity} | Total: ${p.TotalValue:F2}");
+        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2} | Qty: {p.Quantity} | Total: ${p.TotalValue:F2}");
     }
-    Console.WriteLine($"\nTotal: {products.Count} producto(s)");
+    Console.WriteLine($"\nTotal: {products.Count} product(s)");
 }
 
 
 void AddProduct()
 {
-        Console.WriteLine("\n--- Add Product ---");
+    Console.WriteLine("\n--- Add Product ---");
 
     Console.Write("Name: ");
-    string nombre = Console.ReadLine() ?? "";
+    string name = Console.ReadLine() ?? "";
 
     Console.Write("Price: ");
-    if (!decimal.TryParse(Console.ReadLine(), out decimal precio))
+    if (!decimal.TryParse(Console.ReadLine(), out decimal price))
     {
         Console.WriteLine("⚠ Invalid price.");
         return;
     }
 
     Console.Write("Quantity : ");
-    if (!int.TryParse(Console.ReadLine(), out int cantidad))
+    if (!int.TryParse(Console.ReadLine(), out int quantity))
     {
         Console.WriteLine("⚠ Invalid quantity.");
         return;
@@ -267,16 +266,16 @@ void AddProduct()
     Console.Write("Category: ");
     string catStr = Console.ReadLine() ?? "Others";
 
-    if (!Enum.TryParse<ProductCategory>(catStr, true, out var categoria))
+    if (!Enum.TryParse<ProductCategory>(catStr, true, out var category))
     {
-        categoria = ProductCategory.Other;
+        category = ProductCategory.Other;
     }
 
     try
     {
-        var producto = ProductFactory.Create(nombre, precio, cantidad, categoria);
+        var producto = ProductFactory.Create(name, price, quantity, category);
         products.Add(producto);
-        Console.WriteLine($"\n✓ Producto '{producto.Name}' agregado con ID {producto.Id}");
+        Console.WriteLine($"\n✓ Product '{producto.Name}' added with ID {producto.Id}");
     }
     catch (ArgumentException ex)
     {
