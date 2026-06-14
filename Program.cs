@@ -101,20 +101,7 @@ while (isInventoryInitialized)
 }
 
 Environment.Exit(0);
-void showBanner()
-{
-    
-   Console.WriteLine("╔══════════════════════════════════════╗");
-   Console.WriteLine("║      INVENTORY MANAGEMENT SYSTEM     ║");
-   Console.WriteLine("╚══════════════════════════════════════╝");
-   Console.WriteLine();
-   Console.WriteLine($"Version: {version}");
-   Console.WriteLine($"NET: {Environment.Version}");
-   Console.WriteLine($"Platform: {Environment.OSVersion.Platform}");
-   Console.WriteLine();
 
-    
-}
 
 
 void showStructure()
@@ -158,29 +145,6 @@ void showHelp()
 
 
 
-void SearchProduct()
-{
-    Console.WriteLine("🔍 Search Function (to be implemented in Module 4)");
-    
-    Console.Write("\nSearch by name: ");
-    string termino = Console.ReadLine() ?? "";
-
-    var encontrados = products
-        .Where(p => p.Name.Contains(termino, StringComparison.OrdinalIgnoreCase))
-        .ToList();
-
-    if (encontrados.Count == 0)
-    {
-        Console.WriteLine($"No products found with '{termino}'");
-        return;
-    }
-
-    Console.WriteLine($"\n=== {encontrados.Count} result(s) ===");
-    foreach (var p in encontrados)
-    {
-        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2}");
-    }
-}
 
 
 bool ProcessCommand(string comando)
@@ -217,6 +181,20 @@ bool ProcessCommand(string comando)
     return true;
 }
 
+void showBanner()
+{
+    
+   Console.WriteLine("╔══════════════════════════════════════╗");
+   Console.WriteLine("║      INVENTORY MANAGEMENT SYSTEM     ║");
+   Console.WriteLine("╚══════════════════════════════════════╝");
+   Console.WriteLine();
+   Console.WriteLine($"Version: {version}");
+   Console.WriteLine($"NET: {Environment.Version}");
+   Console.WriteLine($"Platform: {Environment.OSVersion.Platform}");
+   Console.WriteLine();
+
+    
+}
 
 string ReadEntry(string prompt)
 {
@@ -280,5 +258,28 @@ void AddProduct()
     catch (ArgumentException ex)
     {
         Console.WriteLine($"\n⚠ Error: {ex.Message}");
+    }
+}
+void SearchProduct()
+{
+    Console.WriteLine("🔍 Search Function (to be implemented in Module 4)");
+    
+    Console.Write("\nSearch by name: ");
+    string searchTerm = Console.ReadLine() ?? "";
+
+    var matches = products
+        .Where(product => product.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    if (matches.Count == 0)
+    {
+        Console.WriteLine($"No products were found with '{searchTerm}'");
+        return;
+    }
+
+    Console.WriteLine($"\n=== {matches.Count} result(s) ===");
+    foreach (var product in matches)
+    {
+        Console.WriteLine($"ID: {product.Id} | {product.Name} | ${product.Price:F2}");
     }
 }
