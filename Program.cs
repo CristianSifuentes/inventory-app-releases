@@ -1,12 +1,32 @@
 // INVENTORY SYSTEM - Module 1 Complete
 using System.Reflection;
+using Inventory.Models;
+using Inventory.Factories;
 
 var assembly = Assembly.GetExecutingAssembly();
 var version = assembly.GetName().Version;
 
+
 int productCount = 0; // Placeholder for product count
 decimal totalValue = 0m; // Placeholder for total inventory value
-bool isInventoryInitialized = true; // Flag to indicate if inventory is initialized
+bool isInventoryInitialized = true; //
+
+// Load initial products (placeholder)
+var products = new List<Product>();
+
+showBanner();
+Console.WriteLine("Available commands: list, add, search, exit");
+Console.WriteLine();
+
+
+bool  shouldContinue = true;
+while (shouldContinue)
+{
+
+    var command = ReadEntry("inventory> ");
+    shouldContinue = ProcessCommand(command);
+}
+
 
 if (args.Length > 0)
 {
@@ -49,9 +69,7 @@ else
     isInventoryInitialized = true;
 }
 
-showBanner();
-Console.WriteLine("Available commands: list, add, search, exit");
-Console.WriteLine();
+
 
 
 while (isInventoryInitialized)
@@ -83,20 +101,7 @@ while (isInventoryInitialized)
 }
 
 Environment.Exit(0);
-void showBanner()
-{
-    
-   Console.WriteLine("╔══════════════════════════════════════╗");
-   Console.WriteLine("║      INVENTORY MANAGEMENT SYSTEM     ║");
-   Console.WriteLine("╚══════════════════════════════════════╝");
-   Console.WriteLine();
-   Console.WriteLine($"Version: {version}");
-   Console.WriteLine($"NET: {Environment.Version}");
-   Console.WriteLine($"Platform: {Environment.OSVersion.Platform}");
-   Console.WriteLine();
 
-    
-}
 
 
 void showStructure()
@@ -139,3 +144,142 @@ void showHelp()
 }
 
 
+
+
+
+bool ProcessCommand(string comando)
+{
+    switch (comando)
+    {
+        case "exit":
+        case "q":
+            Console.WriteLine("See you later!");
+            return false;
+
+        case "list":
+            ListProducts();
+            break;
+
+        case "add":
+            AddProduct();
+            break;
+
+        case "search":
+            SearchProduct();
+            break;
+
+        case "":
+            break;
+
+        default:
+            Console.WriteLine($"❌ Command '{comando}' not recognized");
+            Console.WriteLine("   Use: list, add, search, exit");
+            break;
+    }
+
+    Console.WriteLine();
+    return true;
+}
+
+void showBanner()
+{
+    
+   Console.WriteLine("╔══════════════════════════════════════╗");
+   Console.WriteLine("║      INVENTORY MANAGEMENT SYSTEM     ║");
+   Console.WriteLine("╚══════════════════════════════════════╝");
+   Console.WriteLine();
+   Console.WriteLine($"Version: {version}");
+   Console.WriteLine($"NET: {Environment.Version}");
+   Console.WriteLine($"Platform: {Environment.OSVersion.Platform}");
+   Console.WriteLine();
+
+    
+}
+
+string ReadEntry(string prompt)
+{
+    Console.Write(prompt);
+    return Console.ReadLine()?.Trim().ToLower() ?? "";
+}
+
+void ListProducts()
+{
+    if (products.Count == 0)
+    {
+        Console.WriteLine("📦 There are no products in the inventory.");
+        return;
+    }
+
+    Console.WriteLine("\n=== products ===");
+    foreach (var p in products)
+    {
+        Console.WriteLine($"ID: {p.Id} | {p.Name} | ${p.Price:F2} | Qty: {p.Quantity} | Total: ${p.TotalValue:F2}");
+    }
+    Console.WriteLine($"\nTotal: {products.Count} product(s)");
+}
+
+
+void AddProduct()
+{
+    Console.WriteLine("\n--- Add Product ---");
+
+    Console.Write("Name: ");
+    string name = Console.ReadLine() ?? "";
+
+    Console.Write("Price: ");
+    if (!decimal.TryParse(Console.ReadLine(), out decimal price))
+    {
+        Console.WriteLine("⚠ Invalid price.");
+        return;
+    }
+
+    Console.Write("Quantity : ");
+    if (!int.TryParse(Console.ReadLine(), out int quantity))
+    {
+        Console.WriteLine("⚠ Invalid quantity.");
+        return;
+    }
+
+    Console.WriteLine("\nCategories: Electronics, Clothing, Food, Home, Sports, Books, Others");
+    Console.Write("Category: ");
+    string catStr = Console.ReadLine() ?? "Others";
+
+    if (!Enum.TryParse<ProductCategory>(catStr, true, out var category))
+    {
+        category = ProductCategory.Other;
+    }
+
+    try
+    {
+        var producto = ProductFactory.Create(name, price, quantity, category);
+        products.Add(producto);
+        Console.WriteLine($"\n✓ Product '{producto.Name}' added with ID {producto.Id}");
+    }
+    catch (ArgumentException ex)
+    {
+        Console.WriteLine($"\n⚠ Error: {ex.Message}");
+    }
+}
+void SearchProduct()
+{
+    Console.WriteLine("🔍 Search Function (to be implemented in Module 4)");
+    
+    Console.Write("\nSearch by name: ");
+    string searchTerm = Console.ReadLine() ?? "";
+
+    var matches = products
+        .Where(product => product.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    if (matches.Count == 0)
+    {
+        Console.WriteLine($"No products were found with '{searchTerm}'");
+        return;
+    }
+
+    Console.WriteLine($"\n=== {matches.Count} result(s) ===");
+    foreach (var product in matches)
+    {
+        Console.WriteLine($"ID: {product.Id} | {product.Name} | ${product.Price:F2}");
+    }
+}
