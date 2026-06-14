@@ -251,9 +251,9 @@ void AddProduct()
 
     try
     {
-        var producto = ProductFactory.Create(name, price, quantity, category);
-        products.Add(producto);
-        Console.WriteLine($"\n✓ Product '{producto.Name}' added with ID {producto.Id}");
+        var product = ProductFactory.Create(name, price, quantity, category);
+        products.Add(product);
+        Console.WriteLine($"\n✓ Product '{product.Name}' added with ID {product.Id}");
     }
     catch (ArgumentException ex)
     {
