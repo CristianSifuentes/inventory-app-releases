@@ -1,70 +1,70 @@
-namespace InventarioApp.Infrastructure;
+namespace Inventory.Infrastructure;
 
 /// <summary>
-/// Clase de utilidad para operaciones de archivos.
-/// Centraliza toda la lógica de I/O en un solo lugar.
+/// Utility class for file operations.
+/// Centralizes all I/O logic in one place.
 /// 
-/// Métodos de System.IO utilizados:
-/// - File.WriteAllText: Crea/sobreescribe archivo
-/// - File.ReadAllText: Lee todo el contenido
-/// - File.AppendAllText: Agrega al final
-/// - File.Exists: Verifica existencia
-/// - File.Delete: Elimina archivo
-/// - File.ReadAllLines: Lee línea por línea
-/// - File.WriteAllLines: Escribe líneas
-/// - Directory.CreateDirectory: Crea carpetas
-/// - Directory.GetFiles: Lista archivos con patrón
+/// System.IO methods used:
+/// - File.WriteAllText: Creates or overwrites a file
+/// - File.ReadAllText: Reads all content
+/// - File.AppendAllText: Appends to the end
+/// - File.Exists: Checks existence
+/// - File.Delete: Deletes a file
+/// - File.ReadAllLines: Reads line by line
+/// - File.WriteAllLines: Writes lines
+/// - Directory.CreateDirectory: Creates folders
+/// - Directory.GetFiles: Lists files with a pattern
 /// </summary>
 public class FileManager
 {
-    public void Escribir(string ruta, string contenido)
+    public void Write(string path, string content)
     {
-        File.WriteAllText(ruta, contenido);
+        File.WriteAllText(path, content);
     }
 
-    public string Leer(string ruta)
+    public string Read(string path)
     {
-        return File.ReadAllText(ruta);
+        return File.ReadAllText(path);
     }
 
-    public void Agregar(string ruta, string contenido)
+    public void Append(string path, string content)
     {
-        File.AppendAllText(ruta, contenido);
+        File.AppendAllText(path, content);
     }
 
-    public bool Existe(string ruta)
+    public bool Exists(string path)
     {
-        return File.Exists(ruta);
+        return File.Exists(path);
     }
 
-    public void Eliminar(string ruta)
+    public void Delete(string path)
     {
-        if (Existe(ruta))
+        if (Exists(path))
         {
-            File.Delete(ruta);
+            File.Delete(path);
         }
     }
 
-    public string[] LeerLineas(string ruta)
+    public string[] ReadLines(string path)
     {
-        return File.ReadAllLines(ruta);
+        return File.ReadAllLines(path);
     }
 
-    public void EscribirLineas(string ruta, IEnumerable<string> lineas)
+    public void WriteLines(string path, IEnumerable<string> lines)
     {
-        File.WriteAllLines(ruta, lineas);
+        File.WriteAllLines(path, lines);
     }
 
-    public void CrearDirectorio(string ruta)
+    public void CreateDirectory(string path)
     {
-        Directory.CreateDirectory(ruta);
+        Directory.CreateDirectory(path);
     }
 
-    public string[] ObtenerArchivos(string directorio, string patron = "*")
+    public string[] GetFiles(string directory, string pattern = "*")
     {
-        if (!Directory.Exists(directorio))
+        if (!Directory.Exists(directory))
             return Array.Empty<string>();
 
-        return Directory.GetFiles(directorio, patron);
+        return Directory.GetFiles(directory, pattern);
     }
 }
