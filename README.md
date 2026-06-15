@@ -115,7 +115,7 @@ InventoryApp/
 
 ### Author
 
-Sebastian Martinez
+Cristian Sifuentes
 
 ## Repository Structure
 
