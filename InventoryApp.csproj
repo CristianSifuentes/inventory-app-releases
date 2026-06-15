@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>InventoryApp</AssemblyName>
     <RootNamespace>InventoryApp</RootNamespace>
-    <Version>4.0.0</Version>
+    <Version>5.0.0</Version>
     <Authors>Cristian Sifuentes</Authors>
     <Description>Inventory management system - .NET Fundamentals course</Description>
   </PropertyGroup>
